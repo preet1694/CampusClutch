@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Header -->
+    <TextView
+        android:id="@+id/header"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="College Management System"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_gravity="center_horizontal"
+        android:paddingBottom="24dp"/>
+
+    <!-- Students Button -->
+    <Button
+        android:id="@+id/button_students"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Students"
+        android:padding="16dp"
+        android:layout_marginBottom="12dp"/>
+
+    <!-- Courses Button -->
+    <Button
+        android:id="@+id/button_courses"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Courses"
+        android:padding="16dp"
+        android:layout_marginBottom="12dp"/>
+
+    <!-- Faculty Button -->
+    <Button
+        android:id="@+id/button_faculty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Faculty"
+        android:padding="16dp"
+        android:layout_marginBottom="12dp"/>
+
+    <!-- Departments Button -->
+    <Button
+        android:id="@+id/button_departments"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Departments"
+        android:padding="16dp"
+        android:layout_marginBottom="12dp"/>
+
+    <!-- Logout Button -->
+    <Button
+        android:id="@+id/button_logout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Logout"
+        android:padding="16dp"
+        android:backgroundTint="#FF0000"
+        android:textColor="#FFFFFF"
+        android:layout_marginTop="24dp"/>
+
+</LinearLayout>

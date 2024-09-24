@@ -1,0 +1,3 @@
+com.example.projectcampusclutchdemo.test
+style WhiteBackgroundDialogTheme
+style WhiteBackgroundTheme
