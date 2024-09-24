@@ -1,0 +1,35 @@
+{
+  "project_info": {
+    "project_number": "533126962467",
+    "project_id": "projectcampusclutchdemo",
+    "storage_bucket": "projectcampusclutchdemo.appspot.com"
+  },
+  "rules": {
+    ".read": "auth != null",
+    ".write": "auth != null"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:533126962467:android:ae724f6f0f489871bd8096",
+        "android_client_info": {
+          "package_name": "com.example.projectcampusclutchdemo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxRdFutgCQbMbkaGNeHWyzCWiefQNV044"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+
+    }
+  ],
+  "configuration_version": "1"
+}
+  

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="etEmail" type="id" />
+    <item name="etPassword" type="id" />
+    <item name="btnLogin" type="id" />
+    <item name="etName" type="id" />
+    <item name="etConfirmPassword" type="id" />
+    <item name="radioGroupRole" type="id" />
+    <item name="radioStudent" type="id" />
+    <item name="radioFaculty" type="id" />
+    <item name="btnRegister" type="id" />
+    <item name="ivProfilePic" type="id" />
+    <item name="btnUpdateProfile" type="id" />
+    <item name="btnUploadAssignment" type="id" />
+    <item name="btnViewCourses" type="id" />
+</resources>
