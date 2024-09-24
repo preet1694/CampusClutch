@@ -1,5 +1,0 @@
-com.example.projectcampusclutchdemo.test.app-core-1.6.1-0 C:\Users\Lenovo\.gradle\caches\transforms-4\fc9218558ad721f30310b2da9d27fd8c\transformed\core-1.6.1\res
-com.example.projectcampusclutchdemo.test.app-androidTest-1 C:\Users\Lenovo\AndroidStudioProjects\projectcampusclutchdemo\app\build\generated\res\resValues\androidTest\debug
-com.example.projectcampusclutchdemo.test.app-mergeDebugAndroidTestResources-2 C:\Users\Lenovo\AndroidStudioProjects\projectcampusclutchdemo\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\merged.dir
-com.example.projectcampusclutchdemo.test.app-mergeDebugAndroidTestResources-3 C:\Users\Lenovo\AndroidStudioProjects\projectcampusclutchdemo\app\build\intermediates\incremental\debugAndroidTest\mergeDebugAndroidTestResources\stripped.dir
-com.example.projectcampusclutchdemo.test.app-debugAndroidTest-4 C:\Users\Lenovo\AndroidStudioProjects\projectcampusclutchdemo\app\build\intermediates\merged_res\debugAndroidTest\mergeDebugAndroidTestResources
