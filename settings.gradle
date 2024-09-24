@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "project_campus_clutch"
+rootProject.name = "projectcampusclutchdemo"
 include ':app'
