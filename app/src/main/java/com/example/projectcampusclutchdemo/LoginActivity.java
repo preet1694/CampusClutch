@@ -1,7 +1,5 @@
 package com.example.projectcampusclutchdemo;
 
-import static android.widget.Toast.*;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -27,9 +25,10 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText etEmail, etPassword;
     private Button btnLogin;
-    private TextView textViewRegister;
     private FirebaseAuth auth;
+    private TextView textViewRegister;
     private DatabaseReference databaseReference;
+    private static final String TAG = "LoginActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,22 +56,61 @@ public class LoginActivity extends AppCompatActivity {
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
 
+        // Validate email and password fields
         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
-            makeText(LoginActivity.this, "Please enter your email and password.", LENGTH_SHORT).show();
+            Toast.makeText(LoginActivity.this, "Please enter email and password.", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        // Firebase Authentication to sign in the user
         auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Intent intent = new Intent(LoginActivity.this,MainActivity.class);
-                        startActivity(intent);
-                        finish();
+                        FirebaseUser user = auth.getCurrentUser();
+                        if (user != null) {
+                            // Get user's role from Firebase Database
+                            String userId = user.getUid();
+                            databaseReference.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.exists()) {
+                                        String role = dataSnapshot.child("role").getValue(String.class);
+                                        Log.d(TAG, "User role: " + role);
 
+                                        // Redirect user based on role
+                                        if (role != null) {
+                                            if (role.equals("student")) {
+                                                Intent intent = new Intent(LoginActivity.this, StudentActivity.class);
+                                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // Clear back stack
+                                                startActivity(intent);
+                                                finish();
+                                            } else if (role.equals("faculty")) {
+                                                Intent intent = new Intent(LoginActivity.this, FacultyActivity.class);
+                                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // Clear back stack
+                                                startActivity(intent);
+                                                finish();
+                                            } else {
+                                                Log.e(TAG, "Unknown role: " + role);
+                                                Toast.makeText(LoginActivity.this, "Unknown user role.", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    } else {
+                                        Log.e(TAG, "User data does not exist in the database.");
+                                        Toast.makeText(LoginActivity.this, "Error: user data not found.", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(@NonNull DatabaseError databaseError) {
+                                    Log.e(TAG, "Database error: " + databaseError.getMessage());
+                                    Toast.makeText(LoginActivity.this, "Database error occurred.", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
                     } else {
-                        makeText(LoginActivity.this, "Login failed: " + task.getException().getMessage(), LENGTH_SHORT).show();
+                        Log.e(TAG, "Login failed: " + task.getException().getMessage());
+                        Toast.makeText(LoginActivity.this, "Login failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
     }
-
 }

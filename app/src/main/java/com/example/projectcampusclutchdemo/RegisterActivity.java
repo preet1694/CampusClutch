@@ -29,6 +29,8 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private DatabaseReference databaseReference;
 
+    private static final String TAG = "RegisterActivity"; // TAG for logging
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +56,7 @@ public class RegisterActivity extends AppCompatActivity {
         String name = etName.getText().toString().trim();
         int selectedRoleId = radioGroup.getCheckedRadioButtonId();
 
+        // Basic validation
         if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(name) || selectedRoleId == -1) {
             Toast.makeText(RegisterActivity.this, "Please fill in all the fields.", Toast.LENGTH_SHORT).show();
             return;
@@ -63,6 +66,8 @@ public class RegisterActivity extends AppCompatActivity {
             Toast.makeText(RegisterActivity.this, "Passwords do not match.", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        Log.d(TAG, "Attempting to register user...");
 
         // Register user in Firebase Authentication
         auth.createUserWithEmailAndPassword(email, password)
@@ -78,18 +83,29 @@ public class RegisterActivity extends AppCompatActivity {
                             userDetails.put("name", name);
                             userDetails.put("email", email);
                             userDetails.put("role", role);
-                            Toast.makeText(RegisterActivity.this, "Saving user details...", Toast.LENGTH_SHORT).show();
-                            databaseReference.child(userId).setValue(userDetails);
-                            Toast.makeText(RegisterActivity.this, "Registration successful!", Toast.LENGTH_SHORT).show();
+
+                            // Store user details in Realtime Database
+                            databaseReference.child(userId).setValue(userDetails).addOnCompleteListener(dbTask -> {
+                                if (dbTask.isSuccessful()) {
+                                    Log.d(TAG, "User registration successful, storing details...");
+                                    Toast.makeText(RegisterActivity.this, "Registration successful!", Toast.LENGTH_SHORT).show();
 
                                     // Redirect to LoginActivity
-                            Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // Ensure LoginActivity is cleared from back stack
-                            startActivity(intent);
-                            finish(); // End current activity
-
+                                    Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); // Clear the back stack
+                                    startActivity(intent);
+                                    finish();
+                                } else {
+                                    Log.e(TAG, "Failed to store user details: " + dbTask.getException().getMessage());
+                                    Toast.makeText(RegisterActivity.this, "Failed to store user details.", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        } else {
+                            Log.e(TAG, "User registration failed, FirebaseUser is null");
+                            Toast.makeText(RegisterActivity.this, "Registration failed, please try again.", Toast.LENGTH_SHORT).show();
                         }
                     } else {
+                        Log.e(TAG, "Registration failed: " + task.getException().getMessage());
                         Toast.makeText(RegisterActivity.this, "Registration failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });

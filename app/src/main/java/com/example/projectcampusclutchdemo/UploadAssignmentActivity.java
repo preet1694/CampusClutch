@@ -75,21 +75,38 @@ public class UploadAssignmentActivity extends AppCompatActivity {
 
     // Upload the selected file to Firebase Storage
     private void uploadFile() {
-        progressDialog.show();
-        String fileName = UUID.randomUUID().toString();
-        StorageReference fileReference = storageReference.child("assignments/" + fileName);
+        if (selectedFileUri != null) {
+            progressDialog.show();
 
-        fileReference.putFile(selectedFileUri).addOnSuccessListener(taskSnapshot -> {
-            // Get the file URL after upload
-            fileReference.getDownloadUrl().addOnSuccessListener(uri -> {
-                String fileUrl = uri.toString();
-                saveAssignmentData(fileUrl); // Save assignment metadata in Firebase Realtime Database
+            // Generate a unique file name using UUID
+            String fileName = UUID.randomUUID().toString();
+
+            // Reference to Firebase Storage location
+            StorageReference fileReference = storageReference.child("assignments/" + fileName);
+
+            // Upload the file to Firebase Storage
+            Toast.makeText(UploadAssignmentActivity.this, "Uploading", Toast.LENGTH_SHORT).show();
+            fileReference.putFile(selectedFileUri).addOnSuccessListener(taskSnapshot -> {
+                // Get the file's download URL after upload succeeds
+                fileReference.getDownloadUrl().addOnSuccessListener(uri -> {
+                    String fileUrl = uri.toString();
+                    // Call the method to save the file URL and metadata to the database
+                    saveAssignmentData(fileUrl);
+                    progressDialog.dismiss();
+                    Toast.makeText(UploadAssignmentActivity.this, "File uploaded successfully!", Toast.LENGTH_SHORT).show();
+                }).addOnFailureListener(e -> {
+                    progressDialog.dismiss();
+                    Toast.makeText(UploadAssignmentActivity.this, "Failed to get download URL: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+            }).addOnFailureListener(e -> {
+                progressDialog.dismiss();
+                Toast.makeText(UploadAssignmentActivity.this, "File upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
             });
-        }).addOnFailureListener(e -> {
-            progressDialog.dismiss();
-            Toast.makeText(UploadAssignmentActivity.this, "File upload failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-        });
+        } else {
+            Toast.makeText(UploadAssignmentActivity.this, "No file selected.", Toast.LENGTH_SHORT).show();
+        }
     }
+
 
     // Save the assignment data in Firebase Realtime Database
     private void saveAssignmentData(String fileUrl) {
@@ -118,7 +135,7 @@ public class UploadAssignmentActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_FILE_REQUEST && resultCode == RESULT_OK && data != null) {
+        if (requestCode == PICK_FILE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
             selectedFileUri = data.getData();
             String fileName = selectedFileUri.getLastPathSegment();
             tvAssignmentFileName.setText(fileName);
