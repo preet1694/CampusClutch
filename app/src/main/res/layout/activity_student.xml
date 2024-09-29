@@ -42,4 +42,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="View Courses" />
+    <ListView
+        android:id="@+id/lvAssignments"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </LinearLayout>

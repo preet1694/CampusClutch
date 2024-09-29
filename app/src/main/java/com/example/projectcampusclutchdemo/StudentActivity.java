@@ -10,6 +10,8 @@ import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,7 +30,9 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class StudentActivity extends AppCompatActivity {
@@ -41,6 +45,11 @@ public class StudentActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private DatabaseReference databaseReference;
     private StorageReference storageReference;
+    private ListView lvAssignments;
+    //private FirebaseAuth auth;
+    private DatabaseReference assignmentsRef;
+    private List<Assignment> assignmentList;
+    private AssignmentAdapter assignmentAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +62,15 @@ public class StudentActivity extends AppCompatActivity {
         btnUpdateProfile = findViewById(R.id.btnUpdateProfile);
         btnUploadAssignment = findViewById(R.id.btnUploadAssignment);
         btnViewCourses = findViewById(R.id.btnViewCourses);
+        lvAssignments = findViewById(R.id.lvAssignments);
+        auth = FirebaseAuth.getInstance();
 
+        // Firebase reference to assignments
+        assignmentsRef = FirebaseDatabase.getInstance().getReference("assignments");
+        assignmentList = new ArrayList<>();
+
+        // Load assignments
+        loadAssignments();
         auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
         databaseReference = FirebaseDatabase.getInstance().getReference("users");
@@ -66,7 +83,26 @@ public class StudentActivity extends AppCompatActivity {
         btnUploadAssignment.setOnClickListener(v -> startActivity(new Intent(StudentActivity.this, UploadAssignmentActivity.class)));
         btnViewCourses.setOnClickListener(v -> startActivity(new Intent(StudentActivity.this, CoursesActivity.class)));
     }
+    private void loadAssignments() {
+        assignmentsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                assignmentList.clear(); // Clear the list before adding new data
+                for (DataSnapshot assignmentSnapshot : snapshot.getChildren()) {
+                    Assignment assignment = assignmentSnapshot.getValue(Assignment.class);
+                    assignmentList.add(assignment); // Add each assignment to the list
+                }
+                // Set up the adapter to display assignments in the ListView
+                assignmentAdapter = new AssignmentAdapter(StudentActivity.this, assignmentList);
+                lvAssignments.setAdapter((ListAdapter) assignmentAdapter);
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(StudentActivity.this, "Failed to load assignments: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
     private void openImageChooser() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, PICK_IMAGE_REQUEST);

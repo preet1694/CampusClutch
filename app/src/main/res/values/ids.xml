@@ -13,4 +13,6 @@
     <item name="btnUpdateProfile" type="id" />
     <item name="btnUploadAssignment" type="id" />
     <item name="btnViewCourses" type="id" />
+    <item name="tvTitle" type="id" />
+    <item name="tvDescription" type="id" />
 </resources>
