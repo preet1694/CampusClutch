@@ -1,83 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:padding="16dp"
-    tools:context=".FacultyActivity">
+    tools:context=".FacultyActivity"
+    android:background="@color/white">
 
+    <!-- Assignment Title Input -->
     <EditText
         android:id="@+id/etAssignmentTitle"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Assignment Title"
         android:padding="12dp"
         android:textSize="16sp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="10dp" />
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/edit_text_background" />
 
+    <!-- Assignment Description Input -->
     <EditText
         android:id="@+id/etAssignmentDescription"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Assignment Description"
         android:padding="12dp"
         android:textSize="16sp"
-        app:layout_constraintTop_toBottomOf="@id/etAssignmentTitle"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="10dp" />
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/edit_text_background" />
 
+    <!-- Deadline Display -->
     <TextView
         android:id="@+id/tvDeadline"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="12dp"
         android:text="No Deadline Set"
         android:textSize="16sp"
-        android:background="@drawable/edit_text_background"
-        app:layout_constraintTop_toBottomOf="@id/etAssignmentDescription"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="10dp" />
+        android:textColor="@color/black"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/edit_text_background" />
 
+    <!-- Set Deadline Button -->
     <Button
         android:id="@+id/btnSetDeadline"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Set Deadline"
-        android:background="@drawable/button_background"
         android:textColor="@android:color/white"
-        app:layout_constraintTop_toBottomOf="@id/tvDeadline"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="10dp" />
+        android:backgroundTint="@color/primaryColor"
+        android:layout_marginBottom="12dp" />
 
+    <!-- Select File Button -->
     <Button
         android:id="@+id/btnSelectFile"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Select File"
-        android:background="@drawable/button_background"
         android:textColor="@android:color/white"
-        app:layout_constraintTop_toBottomOf="@id/btnSetDeadline"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="10dp" />
+        android:backgroundTint="@color/primaryColor"
+        android:layout_marginBottom="12dp" />
 
+    <!-- Upload Material Button -->
     <Button
         android:id="@+id/btnUploadMaterial"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Upload Material"
-        android:background="@drawable/button_background"
         android:textColor="@android:color/white"
-        app:layout_constraintTop_toBottomOf="@id/btnSelectFile"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginBottom="10dp" />
+        android:backgroundTint="@color/primaryColor"
+        android:layout_marginBottom="12dp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- Add Course Button -->
+    <Button
+        android:id="@+id/btnAddCourse"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Course"
+        android:textColor="@android:color/white"
+        android:backgroundTint="@color/primaryColor"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Edit Course Button -->
+    <Button
+        android:id="@+id/btnEditCourse"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Edit Course"
+        android:textColor="@android:color/white"
+        android:backgroundTint="@color/primaryColor"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Courses RecyclerView -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/coursesRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:paddingBottom="16dp" />
+
+</LinearLayout>

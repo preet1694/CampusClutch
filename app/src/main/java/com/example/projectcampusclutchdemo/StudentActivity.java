@@ -50,6 +50,10 @@ public class StudentActivity extends AppCompatActivity {
     private DatabaseReference assignmentsRef;
     private List<Assignment> assignmentList;
     private AssignmentAdapter assignmentAdapter;
+    private ListView listViewMaterials;
+    private MaterialAdapter materialAdapter;
+    private List<Material> materialList;
+    private DatabaseReference materialsRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,14 +72,21 @@ public class StudentActivity extends AppCompatActivity {
         // Firebase reference to assignments
         assignmentsRef = FirebaseDatabase.getInstance().getReference("assignments");
         assignmentList = new ArrayList<>();
-
+        assignmentAdapter = new AssignmentAdapter(this,assignmentList);
         // Load assignments
         loadAssignments();
         auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
         databaseReference = FirebaseDatabase.getInstance().getReference("users");
         storageReference = FirebaseStorage.getInstance().getReference("profile_pics");
+        listViewMaterials = findViewById(R.id.listViewMaterials);
+        materialList = new ArrayList<>();
+        materialAdapter = new MaterialAdapter(this, materialList);
+        listViewMaterials.setAdapter(materialAdapter);
 
+        materialsRef = FirebaseDatabase.getInstance().getReference("materials");
+
+        loadMaterials();
 
 
         ivProfilePic.setOnClickListener(v -> openImageChooser());
@@ -84,25 +95,34 @@ public class StudentActivity extends AppCompatActivity {
         btnViewCourses.setOnClickListener(v -> startActivity(new Intent(StudentActivity.this, CoursesActivity.class)));
     }
     private void loadAssignments() {
+        DatabaseReference assignmentsRef = FirebaseDatabase.getInstance().getReference("assignments");
         assignmentsRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                assignmentList.clear(); // Clear the list before adding new data
-                for (DataSnapshot assignmentSnapshot : snapshot.getChildren()) {
-                    Assignment assignment = assignmentSnapshot.getValue(Assignment.class);
-                    assignmentList.add(assignment); // Add each assignment to the list
-                }
-                // Set up the adapter to display assignments in the ListView
-                assignmentAdapter = new AssignmentAdapter(StudentActivity.this, assignmentList);
-                lvAssignments.setAdapter((ListAdapter) assignmentAdapter);
-            }
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                assignmentList.clear();
+                if (dataSnapshot.exists()) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        Assignment assignment = snapshot.getValue(Assignment.class);
 
+                        if (assignment != null) {
+                            // Ensure that the assignment has a deadline field
+                            if (assignment.getDeadline() != null) {
+                                assignmentList.add(assignment);
+                            }
+                        }
+                    }
+                    assignmentAdapter.notifyDataSetChanged(); // Notify adapter of data change
+                } else {
+                    Toast.makeText(StudentActivity.this, "No assignments available", Toast.LENGTH_SHORT).show();
+                }
+            }
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Toast.makeText(StudentActivity.this, "Failed to load assignments: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Toast.makeText(StudentActivity.this, "Failed to load assignments.", Toast.LENGTH_SHORT).show();
             }
         });
     }
+
     private void openImageChooser() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(intent, PICK_IMAGE_REQUEST);
@@ -138,7 +158,24 @@ public class StudentActivity extends AppCompatActivity {
             }
         }
     }
+    private void loadMaterials() {
+        materialsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                materialList.clear();
+                for (DataSnapshot materialSnapshot : snapshot.getChildren()) {
+                    Material material = materialSnapshot.getValue(Material.class);
+                    materialList.add(material);
+                }
+                materialAdapter.notifyDataSetChanged();
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(StudentActivity.this, "Failed to load materials", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
     private void uploadProfilePic(String userId) {
         if (profilePicUri != null) {
             StorageReference profilePicRef = storageReference.child(userId + ".jpg");
